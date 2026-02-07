@@ -14,7 +14,10 @@ my-next-app/
 │   │       └── route.js   # API Endpoint (GET/POST)
 │   ├── customers/
 │   │   └── page.jsx       # ফ্রন্টেন্ড ডিসপ্লে পেজ
-│   └── layout.js
+│   ├── add-customers/
+│   │   └── page.jsx  
+│   └── layout.jsx
+│   └── page.jsx
 ├── .env.local             # ডাটাবেজ পাসওয়ার্ড এবং সিক্রেট ফাইল
 ├── package.json
 └── ...
