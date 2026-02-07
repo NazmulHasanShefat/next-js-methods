@@ -32,10 +32,11 @@ DB_USER=root
 DB_PASSWORD=your_password_here
 DB_NAME=shop_db
 ```
-##### খ. `lib/db.js` (কানেকশন সেটআপ)
+##### খ. `lib/db.js` (কানেকশন সেটআপ) (project load হওয়ার সাথে সাথে টেবল create হয়ে যাবে)
 ##### এটি একবার তৈরি করে নিলে আপনি পুরো প্রজেক্টের যেকোনো জায়গা থেকে ডাটাবেজ কল করতে পারবেন।
 ```js
 import mysql from 'mysql2/promise';
+import { tableSchemas } from "@/lib/schema";
 
 export const db = mysql.createPool({
   host: process.env.DB_HOST,
@@ -45,7 +46,50 @@ export const db = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
 });
+
+// টেবিল অটো-তৈরির ফাংশন
+async function initDB() {
+  try {
+    for(const query of tableSchemas){
+      await db.query(query);
+    }
+    console.log("✅ Database Table Verified/Created");
+  } catch (err) {
+    console.error("❌ Error creating table:", err);
+  }
+}
+
+// এটি কল করলে অ্যাপ রান হওয়ার সময় টেবিল তৈরি হবে
+initDB();
 ```
+
+##### খ 2. `lib/schema.js` TABLE CREATE হওয়ার জন্য প্রয়জনিয় schema rady করা হলো
+##### এটি একবার তৈরি করে নিলে আপনি পুরো প্রজেক্টের যেকোনো জায়গা থেকে ডাটাবেজ কল করতে পারবেন।
+```js
+// lib/schema.js
+// * sql * / এই কমেন্ট এর কারলে schema এর string হাইলাইট হবে। 
+export const tableSchemas = [
+    /* sql */ 
+  `CREATE TABLE IF NOT EXISTS Customers2 (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    CustomerName VARCHAR(255) NOT NULL,
+    City VARCHAR(100),
+    Country VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );`,
+  /* sql */
+  `CREATE TABLE IF NOT EXISTS Orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    CustomerId INT,
+    OrderDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    Amount DECIMAL(10, 2),
+    FOREIGN KEY (CustomerId) REFERENCES Customers(id)
+  );`
+];
+```
+
+
+
 ##### গ. `app/api/customers/route.js` (ব্যাকেন্ড এপিআই)
 ##### যদি আপনি মোবাইল অ্যাপ বা অন্য কোনো জায়গা থেকে ডাটা এক্সেস করতে চান, তবে এই এপিআই রুটটি দরকার।
 ```js
