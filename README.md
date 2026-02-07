@@ -3,6 +3,7 @@
 <details>
 <summary>How to use mySql in next js app</summary>
 
+```text
 my-next-app/
 ├── lib/
 │   └── db.js              # ডাটাবেজ কানেকশন ফাইল
@@ -16,7 +17,7 @@ my-next-app/
 ├── .env.local             # ডাটাবেজ পাসওয়ার্ড এবং সিক্রেট ফাইল
 ├── package.json
 └── ...
-
+```
 
 ```js
 console.log(hello)
