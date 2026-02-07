@@ -6,6 +6,8 @@
 
 ```text
 my-next-app/
+├── models/
+│   └── models.js         # কাস্টমার রিলেটেড সব SQL কুয়েরি ফাংশন
 ├── lib/
 │   └── db.js              # DATRBASE CONNECTION FILE
 │   └── schema.js              # CREATE TABLE SCHEMA 
@@ -88,7 +90,45 @@ export const tableSchemas = [
   );`
 ];
 ```
+##### খ 3. `models/customer.model.js` কেন এটি করবেন? (একটি উদাহরণ)
+##### ধরুন, আপনি কাস্টমার ডাটা ৩-৪টি আলাদা পেজে দেখাতে চান। প্রতিবার `db.query('SELECT * FROM...')` না লিখে আপনি `models/Customer.js`-এ একটি ফাংশন বানিয়ে রাখতে পারেন।
+```js
+import { db } from '@/lib/db';
 
+export const CustomerModel = {
+  // সব কাস্টমার তুলে আনা
+  getAll: async () => {
+    const [rows] = await db.query('SELECT * FROM Customers');
+    return rows;
+  },
+
+  // নতুন কাস্টমার যোগ করা
+  create: async (name, city, country) => {
+    const [result] = await db.query(
+      'INSERT INTO Customers (CustomerName, City, Country) VALUES (?, ?, ?)',
+      [name, city, country]
+    );
+    return result;
+  },
+
+  // আইডি দিয়ে কাস্টমার খোঁজা
+  getById: async (id) => {
+    const [rows] = await db.query('SELECT * FROM Customers WHERE id = ?', [id]);
+    return rows[0];
+  }
+};
+```
+##### এতে আপনার লাভ কী?
+##### এখন আপনার `app/customers/page.jsx` ফাইলে কোড অনেক ছোট হয়ে যাবে:
+```js
+// page.jsx ফাইলে সরাসরি কুয়েরি না লিখে মডেল কল করা
+import { CustomerModel } from '@/models/Customer';
+
+export default async function Page() {
+  const customers = await CustomerModel.getAll(); // কত সহজ!
+  // ... বাকি কোড
+}
+```
 
 
 ##### গ. `app/api/customers/route.js` (ব্যাকেন্ড এপিআই)
