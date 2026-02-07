@@ -3,6 +3,7 @@
 <details>
 <summary>How to use mySql in next js app</summary>
 
+
 ```text
 my-next-app/
 ├── lib/
@@ -17,6 +18,16 @@ my-next-app/
 ├── .env.local             # ডাটাবেজ পাসওয়ার্ড এবং সিক্রেট ফাইল
 ├── package.json
 └── ...
+```
+
+### ক. `.env.local` (আপনার পাসওয়ার্ড এখানে থাকবে)
+### রজেক্টের রুট ডিরেক্টরিতে এই ফাইলটি তৈরি করুন।
+
+```js
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_password_here
+DB_NAME=shop_db
 ```
 
 ```js
