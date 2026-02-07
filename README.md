@@ -7,13 +7,14 @@
 ```text
 my-next-app/
 ├── lib/
-│   └── db.js              # ডাটাবেজ কানেকশন ফাইল
+│   └── db.js              # DATRBASE CONNECTION FILE
+│   └── schema.js              # CREATE TABLE SCHEMA 
 ├── app/
 │   ├── api/
 │   │   └── customers/
 │   │       └── route.js   # API Endpoint (GET/POST)
 │   ├── customers/
-│   │   └── page.jsx       # ফ্রন্টেন্ড ডিসপ্লে পেজ
+│   │   └── page.jsx       # FRONTEND DISPLAY
 │   ├── add-customers/
 │   │   └── page.jsx  
 │   └── layout.jsx
