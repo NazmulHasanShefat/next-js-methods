@@ -119,7 +119,7 @@ export default async function Home() {
 
 ```
 
-##### ২. `app/add-customer/page.jsx` এর কোড
+##### ২. table এ customer add করার জন্য `app/add-customer/page.jsx` এর কোড
 ##### নিচের কোডটি কপি করে আপনার ফাইলে বসিয়ে দিন। এখানে ফর্ম ডিজাইন এবং ডাটাবেজে ডাটা পাঠানোর (POST) কাজ একই সাথে করা হয়েছে।
 
 ```js
