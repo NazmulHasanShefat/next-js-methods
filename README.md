@@ -29,10 +29,19 @@ DB_USER=root
 DB_PASSWORD=your_password_here
 DB_NAME=shop_db
 ```
-
+##### খ. `lib/db.js` (কানেকশন সেটআপ)
+##### এটি একবার তৈরি করে নিলে আপনি পুরো প্রজেক্টের যেকোনো জায়গা থেকে ডাটাবেজ কল করতে পারবেন।
 ```js
-console.log(hello)
-console.log(hello)
+import mysql from 'mysql2/promise';
+
+export const db = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  waitForConnections: true,
+  connectionLimit: 10,
+});
 ```
 </details>
 
