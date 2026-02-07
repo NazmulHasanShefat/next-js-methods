@@ -294,5 +294,6 @@ export default function AddCustomerPage() {
 ```
 </details>
 
-* [ইন্সটলেশন গাইড](./doc.md)
+
+[ইন্সটলেশন গাইড](./doc.md)
 
