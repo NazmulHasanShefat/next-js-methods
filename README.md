@@ -43,7 +43,7 @@ export const db = mysql.createPool({
   connectionLimit: 10,
 });
 ```
-##### গ. app/api/customers/route.js (ব্যাকেন্ড এপিআই)
+##### গ. `app/api/customers/route.js` (ব্যাকেন্ড এপিআই)
 ##### যদি আপনি মোবাইল অ্যাপ বা অন্য কোনো জায়গা থেকে ডাটা এক্সেস করতে চান, তবে এই এপিআই রুটটি দরকার।
 ```js
 import { db } from '@/lib/db';
@@ -58,7 +58,7 @@ export async function GET() {
   }
 }
 ```
-##### ঘ. app/customers/page.jsx (ফ্রন্টেন্ড পেজ)
+##### ঘ. `app/customers/page.jsx` (ফ্রন্টেন্ড পেজ)
 ##### এটি সরাসরি সার্ভার থেকে ডাটা এনে ইউজারের সামনে রেন্ডার করবে।
 
 ```js
@@ -114,6 +114,95 @@ export default async function Home() {
   );
 }
 
+```
+
+##### ২. `app/add-customer/page.jsx` এর কোড
+##### নিচের কোডটি কপি করে আপনার ফাইলে বসিয়ে দিন। এখানে ফর্ম ডিজাইন এবং ডাটাবেজে ডাটা পাঠানোর (POST) কাজ একই সাথে করা হয়েছে।
+
+```js
+import { db } from '@/lib/db';
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+
+export default function AddCustomerPage() {
+  
+  // এটি একটি Server Action যা সরাসরি ডাটাবেজে ডাটা সেভ করবে
+  async function createCustomer(formData) {
+    'use server';
+
+    // ১. ফর্ম থেকে ডাটা সংগ্রহ করা
+    const name = formData.get('customerName');
+    const city = formData.get('city');
+    const country = formData.get('country');
+
+    // ২. MySQL-এ ডাটা ইনসার্ট করার কুয়েরি
+    try {
+      await db.query(
+        'INSERT INTO Customers (CustomerName, City, Country) VALUES (?, ?, ?)',
+        [name, city, country]
+      );
+      
+      console.log('Data saved successfully!');
+    } catch (error) {
+      console.error('Database Error:', error);
+    }
+
+    // ৩. ডাটা সেভ হওয়ার পর ক্যাশ ক্লিয়ার করা এবং মেইন পেজে পাঠিয়ে দেওয়া
+    revalidatePath('/'); 
+    redirect('/'); 
+  }
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
+      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">নতুন কাস্টমার যোগ করুন</h2>
+        
+        {/* ফর্ম শুরু - action এ আমাদের ফাংশনটি কল করা হয়েছে */}
+        <form action={createCustomer} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">কাস্টমারের নাম</label>
+            <input 
+              name="customerName" 
+              type="text" 
+              required 
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="যেমন: আশিকুর রহমান"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">শহর</label>
+            <input 
+              name="city" 
+              type="text" 
+              required 
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="যেমন: নাটোর"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">দেশ</label>
+            <input 
+              name="country" 
+              type="text" 
+              required 
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              placeholder="যেমন: বাংলাদেশ"
+            />
+          </div>
+
+          <button 
+            type="submit" 
+            className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200"
+          >
+            ডাটা সেভ করুন
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
 ```
 </details>
 
